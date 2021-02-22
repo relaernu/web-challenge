@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <title>Weather Data</title>
+  </head> 
+  <body>
+    <div class="container" id="navbar-container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html"
+          style="background-color: #4aaaa5; color: white; padding: 5px;">Latitude</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="visualizations.html" title="Visualizations">Visualizations</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link active" href="data.html">Data</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" title="Comparison">
+                Comparison
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="cmp_temperature.html" title="Latitude vs. Max Temperature">Temperature</a>
+                <a class="dropdown-item" href="cmp_humidity.html" title="Latitude vs. Humidity">Humidity</a>
+                <a class="dropdown-item" href="cmp_windspeed.html" title="Latitude vs. Wind Speed">Wind Speed</a>
+                <!-- <div class="dropdown-divider"></div> -->
+                <a class="dropdown-item" href="cmp_cloudiness.html" title="Latitude vs. Cloudiness">Cloudiness</a>
+            </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    
+    <div class="container" align="center">
+      <h1>Weather Data</h1>
+    </div>
+  
+    <div class="container" id="dataviewer">
+      The table won't load because Chrome cross origin requests are only supported for protocol schemes: http, data, chrome-extension, edge, https, chrome-untrusted.<br>
+      To successfully load the csv, try the following command with Chrome:<br>
+      <b>&nbsp; &nbsp; &nbsp; &nbsp;chrome.exe --allow-file-access-from-files</b>
+    </div>
+    
+    <footer class="bg-light text-center text-lg-start">
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2021 Copyright:
+          <a class="text-dark" href="index.html">bootcampspot.com</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+    <script type="text/javascript" src="./bootstrap/js/jquery.min.js"></script>
+    <script type="text/javascript" src="./bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- <script type="text/javascript" src="./js/csvReader.js"></script> -->
+    <script>
+      function csvReader(data) {
+        var lines = allText.split(/\r\n|\n/);
+        var header = lines[0].split(',');
+        var first_line = lines[1].split(',');
+
+        // start of table
+        var table_data = '<table class="table table-bordered table-striped">';
+
+        // add row for header
+        table_data += "<tr>";
+
+        // add header 
+        for (var col = 0; col < header.legnth; col++) {
+          table_data += "<th>"
+          table_data += header[col];
+          table_data += "</th>";
+        }
+        table_data += "</tr>"
+
+        while (first_line.legnth > 0) {
+          table_data += "<tr>"
+          for (var col = 0; col < first_line.legnth; col++) {
+            table_data += "<td>";
+            table_data += first_line[col];
+            table_data += "</td>"
+          }
+          table_data += "</tr>"
+        }
+
+        table_data += "</table>";
+        return table_data;
+      }
+    </script>
+    <script>
+      $(document).ready(function () {
+        // $('#load_data').click(function () {
+        $.ajax({
+          url: "cities.csv",
+          dataType: "text",
+          success: function (data) {
+            var city_data = data.split(/\r?\n|\r/);
+            var table_data = '<table class="table table-bordered table-striped">';
+            for (var count = 0; count < city_data.length; count++) {
+              if (city_data[count].trim() == 0) {
+                continue;
+              }
+              var cell_data = city_data[count].split(",");
+              table_data += '<tr>';
+              for (var cell_count = 0; cell_count < cell_data.length; cell_count++) {
+                if (count === 0) {
+                  table_data += '<th>' + cell_data[cell_count] + '</th>';
+                }
+                else {
+                  table_data += '<td>' + cell_data[cell_count] + '</td>';
+                }
+              }
+              table_data += '</tr>';
+            }
+            table_data += '</table>';
+            $('#dataviewer').html(table_data);
+          }
+        });
+      });
+    // });
+    </script>
+  </body>
+  
+  </html>
+
